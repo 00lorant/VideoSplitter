@@ -5,16 +5,22 @@ import shutil
 import zipfile
 import logging
 import subprocess
+import math
 
 from pathlib import Path
+
 from fastapi import FastAPI, UploadFile, File, Form, HTTPException
 from fastapi.responses import FileResponse
 from starlette.background import BackgroundTask
 from fastapi.middleware.cors import CORSMiddleware
 
+
 # --------------------------------------------------
 # CONFIGURATION
 # --------------------------------------------------
+
+APP_DIR = Path(__file__).resolve().parent
+INDEX_FILE = APP_DIR / "index.html"
 
 BASE_DIR = Path("/tmp/videosplitter")
 BASE_DIR.mkdir(parents=True, exist_ok=True)
@@ -34,25 +40,35 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 # --------------------------------------------------
-# HOME
+# WEBSITE
 # --------------------------------------------------
 
 @app.get("/")
 def home():
-    return {
-        "app": "VideoSplitter",
-        "status": "online",
-        "clip_options": [
-            30, 60, 120, 180, 240, 300
-        ],
-        "custom_duration": True
-    }
+    if not INDEX_FILE.exists():
+        raise HTTPException(
+            500,
+            "Website file index.html was not found."
+        )
 
+    return FileResponse(
+        path=str(INDEX_FILE),
+        media_type="text/html"
+    )
+
+
+# --------------------------------------------------
+# HEALTH CHECK
+# --------------------------------------------------
 
 @app.get("/health")
 def health():
-    return {"status": "healthy"}
+    return {
+        "status": "healthy",
+        "app": "VideoSplitter"
+    }
 
 
 # --------------------------------------------------
@@ -63,7 +79,10 @@ def cleanup_job(job_dir):
     try:
         if job_dir.exists():
             shutil.rmtree(job_dir)
-            logger.info("Cleaned job: %s", job_dir.name)
+            logger.info(
+                "Cleaned job: %s",
+                job_dir.name
+            )
     except Exception:
         logger.exception("Cleanup failed")
 
@@ -79,17 +98,27 @@ async def split_video(
 ):
 
     allowed_extensions = {
-        ".mp4", ".mov", ".mkv",
-        ".avi", ".webm", ".m4v"
+        ".mp4",
+        ".mov",
+        ".mkv",
+        ".avi",
+        ".webm",
+        ".m4v"
     }
 
     if not video.filename:
-        raise HTTPException(400, "Please select a video.")
+        raise HTTPException(
+            400,
+            "Please select a video."
+        )
 
     extension = Path(video.filename).suffix.lower()
 
     if extension not in allowed_extensions:
-        raise HTTPException(400, "Unsupported video format.")
+        raise HTTPException(
+            400,
+            "Unsupported video format."
+        )
 
     if clip_duration < 1 or clip_duration > MAX_CLIP_DURATION:
         raise HTTPException(
@@ -108,6 +137,7 @@ async def split_video(
     output_dir.mkdir()
 
     try:
+
         # ------------------------------------------
         # SAVE UPLOAD IN SMALL CHUNKS
         # ------------------------------------------
@@ -117,6 +147,7 @@ async def split_video(
         with input_path.open("wb") as output_file:
 
             while True:
+
                 chunk = await video.read(1024 * 1024)
 
                 if not chunk:
@@ -135,7 +166,10 @@ async def split_video(
         await video.close()
 
         if total_size == 0:
-            raise HTTPException(400, "Uploaded video is empty.")
+            raise HTTPException(
+                400,
+                "Uploaded video is empty."
+            )
 
         logger.info(
             "Upload complete: %s bytes | Job: %s",
@@ -163,19 +197,19 @@ async def split_video(
 
         duration = float(probe.stdout.strip())
 
-        if duration <= 0:
+        if not math.isfinite(duration) or duration <= 0:
             raise HTTPException(
                 400,
                 "Could not determine video duration."
             )
 
-        total_clips = int(
-            (duration + clip_duration - 0.001)
-            // clip_duration
+        total_clips = math.ceil(
+            duration / clip_duration
         )
 
         logger.info(
-            "Processing video: %.2f seconds | Clip length: %s seconds | Total clips: %s",
+            "Processing video: %.2f seconds | "
+            "Clip length: %s seconds | Total clips: %s",
             duration,
             clip_duration,
             total_clips
@@ -188,7 +222,9 @@ async def split_video(
         for index in range(total_clips):
 
             start_time = index * clip_duration
+
             remaining = duration - start_time
+
             current_length = min(
                 clip_duration,
                 remaining
@@ -226,7 +262,7 @@ async def split_video(
             )
 
         # ------------------------------------------
-        # CREATE ZIP
+        # CREATE ZIP FILE
         # ------------------------------------------
 
         with zipfile.ZipFile(
@@ -236,12 +272,16 @@ async def split_video(
         ) as archive:
 
             for clip in sorted(output_dir.glob("*.mp4")):
+
                 archive.write(
                     clip,
                     arcname=clip.name
                 )
 
-        logger.info("Job completed: %s", job_id)
+        logger.info(
+            "Job completed: %s",
+            job_id
+        )
 
         # ------------------------------------------
         # RETURN DOWNLOAD
@@ -263,6 +303,7 @@ async def split_video(
 
     except subprocess.TimeoutExpired:
         cleanup_job(job_dir)
+
         raise HTTPException(
             408,
             "Processing timed out. Try a shorter video."
@@ -271,14 +312,16 @@ async def split_video(
     except subprocess.CalledProcessError:
         logger.exception("FFmpeg failed")
         cleanup_job(job_dir)
+
         raise HTTPException(
             500,
             "Video processing failed."
         )
 
     except Exception:
-        logger.exception("Unexpected error")
+        logger.exception("Unexpected processing error")
         cleanup_job(job_dir)
+
         raise HTTPException(
             500,
             "Something went wrong while processing your video."
@@ -293,6 +336,7 @@ async def split_video(
 # --------------------------------------------------
 
 if __name__ == "__main__":
+
     import uvicorn
 
     uvicorn.run(
@@ -300,3 +344,4 @@ if __name__ == "__main__":
         host="0.0.0.0",
         port=int(os.environ.get("PORT", 10000))
     )
+
