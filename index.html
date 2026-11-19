@@ -1,0 +1,425 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VideoSplitter</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #090811;
+    color: #fff;
+    min-height: 100vh;
+    padding: 25px 16px;
+}
+
+.container {
+    max-width: 650px;
+    margin: 0 auto;
+}
+
+header {
+    text-align: center;
+    padding: 30px 0;
+}
+
+.logo {
+    font-size: 30px;
+    font-weight: 800;
+    color: #a78bfa;
+}
+
+header p {
+    color: #9994ae;
+    margin-top: 10px;
+}
+
+.panel {
+    background: #141220;
+    border: 1px solid #302744;
+    border-radius: 18px;
+    padding: 24px;
+    margin-bottom: 20px;
+}
+
+h2 {
+    font-size: 18px;
+    margin-bottom: 17px;
+}
+
+.upload {
+    border: 2px dashed #6844a5;
+    border-radius: 14px;
+    padding: 35px 15px;
+    text-align: center;
+    background: #1b162b;
+    cursor: pointer;
+}
+
+.upload:hover {
+    border-color: #b18aff;
+}
+
+.upload .symbol {
+    font-size: 38px;
+    margin-bottom: 12px;
+}
+
+.upload p {
+    color: #aaa4bc;
+    font-size: 14px;
+    margin-top: 8px;
+}
+
+#video {
+    display: none;
+}
+
+#fileName {
+    color: #c4a5ff;
+    margin-top: 15px;
+    font-size: 14px;
+    overflow-wrap: anywhere;
+}
+
+.options {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+}
+
+.option {
+    background: #211b32;
+    color: #ddd5ed;
+    border: 1px solid #403450;
+    padding: 15px 5px;
+    border-radius: 10px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.option.active {
+    background: #7139c6;
+    border-color: #b18aff;
+    color: white;
+}
+
+label {
+    display: block;
+    color: #aaa4bc;
+    font-size: 13px;
+    margin-bottom: 10px;
+}
+
+input[type="number"] {
+    width: 100%;
+    padding: 14px;
+    border-radius: 10px;
+    background: #211b32;
+    border: 1px solid #403450;
+    color: white;
+    font-size: 16px;
+    margin-top: 10px;
+}
+
+.custom {
+    margin-top: 20px;
+}
+
+.info {
+    color: #aaa4bc;
+    font-size: 13px;
+    margin-top: 16px;
+    line-height: 1.6;
+}
+
+.main-button {
+    width: 100%;
+    padding: 17px;
+    border: none;
+    border-radius: 12px;
+    background: linear-gradient(100deg, #7838d2, #a15cf4);
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+.main-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.status {
+    display: none;
+    margin-top: 20px;
+    padding: 16px;
+    border-radius: 12px;
+    background: #211b32;
+    color: #d8c5ff;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+
+.progress {
+    width: 100%;
+    height: 7px;
+    background: #393047;
+    border-radius: 20px;
+    margin-top: 14px;
+    overflow: hidden;
+}
+
+.progress div {
+    width: 35%;
+    height: 100%;
+    background: #a16aff;
+    animation: loading 1.5s infinite alternate;
+}
+
+@keyframes loading {
+    from { width: 15%; }
+    to { width: 95%; }
+}
+
+footer {
+    text-align: center;
+    color: #716b82;
+    font-size: 12px;
+    padding: 20px;
+}
+
+@media(max-width: 400px) {
+    .options {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<header>
+    <div class="logo">VideoSplitter</div>
+    <p>Split your videos into clips. Your way.</p>
+</header>
+
+<div class="panel">
+    <h2>1. Upload your video</h2>
+
+    <label class="upload" for="video">
+        <div class="symbol">＋</div>
+        <strong>Choose a video</strong>
+        <p>Upload from your device or camera roll</p>
+        <p>MP4, MOV, MKV, AVI, WEBM</p>
+        <div id="fileName"></div>
+    </label>
+
+    <input
+        type="file"
+        id="video"
+        accept="video/mp4,video/quicktime,video/x-matroska,video/x-msvideo,video/webm,.m4v"
+    >
+</div>
+
+<div class="panel">
+    <h2>2. Choose your clip length</h2>
+
+    <div class="options">
+        <button class="option" data-seconds="30">30 seconds</button>
+        <button class="option active" data-seconds="60">1 minute</button>
+        <button class="option" data-seconds="120">2 minutes</button>
+        <button class="option" data-seconds="180">3 minutes</button>
+        <button class="option" data-seconds="240">4 minutes</button>
+        <button class="option" data-seconds="300">5 minutes</button>
+    </div>
+
+    <div class="custom">
+        <label for="customMinutes">Or enter a custom clip length in minutes</label>
+        <input
+            type="number"
+            id="customMinutes"
+            min="0.02"
+            max="60"
+            step="0.01"
+            placeholder="Example: 2.5"
+        >
+    </div>
+
+    <p class="info" id="clipInfo">
+        Each clip will be 1 minute long.
+    </p>
+</div>
+
+<div class="panel">
+    <h2>3. Split your video</h2>
+
+    <p class="info">
+        Your video will be split sequentially. The final clip may be shorter
+        than your selected length.
+    </p>
+
+    <button class="main-button" id="splitButton">
+        Split My Video
+    </button>
+
+    <div class="status" id="status">
+        <strong id="statusText">Preparing your video...</strong>
+        <div class="progress">
+            <div></div>
+        </div>
+    </div>
+</div>
+
+<footer>
+    VideoSplitter · Simple video splitting
+</footer>
+
+</div>
+
+<script>
+const videoInput = document.getElementById("video");
+const fileName = document.getElementById("fileName");
+const customInput = document.getElementById("customMinutes");
+const clipInfo = document.getElementById("clipInfo");
+const splitButton = document.getElementById("splitButton");
+const statusBox = document.getElementById("status");
+const statusText = document.getElementById("statusText");
+
+let selectedDuration = 60;
+
+document.querySelectorAll(".option").forEach(button => {
+    button.addEventListener("click", () => {
+        document.querySelectorAll(".option").forEach(item => {
+            item.classList.remove("active");
+        });
+
+        button.classList.add("active");
+        selectedDuration = Number(button.dataset.seconds);
+        customInput.value = "";
+        updateInfo();
+    });
+});
+
+customInput.addEventListener("input", () => {
+    if (customInput.value !== "") {
+        document.querySelectorAll(".option").forEach(item => {
+            item.classList.remove("active");
+        });
+        updateInfo();
+    }
+});
+
+videoInput.addEventListener("change", () => {
+    const file = videoInput.files[0];
+
+    fileName.textContent = file ? file.name : "";
+});
+
+function getDuration() {
+    if (customInput.value !== "") {
+        const minutes = Number(customInput.value);
+
+        if (!Number.isFinite(minutes) || minutes <= 0 || minutes > 60) {
+            throw new Error("Enter a custom duration between 0.02 and 60 minutes.");
+        }
+
+        return Math.max(1, Math.round(minutes * 60));
+    }
+
+    return selectedDuration;
+}
+
+function updateInfo() {
+    try {
+        const seconds = getDuration();
+        const minutes = seconds / 60;
+
+        clipInfo.textContent =
+            `Each clip will be ${minutes} minute(s) long.`;
+    } catch (error) {
+        clipInfo.textContent = error.message;
+    }
+}
+
+splitButton.addEventListener("click", async () => {
+    const file = videoInput.files[0];
+
+    if (!file) {
+        alert("Please choose a video first.");
+        return;
+    }
+
+    let duration;
+
+    try {
+        duration = getDuration();
+    } catch (error) {
+        alert(error.message);
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append("video", file);
+    formData.append("clip_duration", duration);
+
+    splitButton.disabled = true;
+    splitButton.textContent = "Processing...";
+    statusBox.style.display = "block";
+    statusText.textContent = "Uploading and splitting your video. Please wait.";
+
+    try {
+        const response = await fetch("/split", {
+            method: "POST",
+            body: formData
+        });
+
+        if (!response.ok) {
+            let message = "Video processing failed.";
+
+            try {
+                const error = await response.json();
+                message = error.detail || message;
+            } catch (_) {}
+
+            throw new Error(message);
+        }
+
+        const blob = await response.blob();
+        const downloadUrl = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+
+        link.href = downloadUrl;
+        link.download = "VideoSplitter_Clips.zip";
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+
+        statusText.textContent = "Your clips are ready! Your ZIP download should begin.";
+
+        setTimeout(() => URL.revokeObjectURL(downloadUrl), 60000);
+
+    } catch (error) {
+        statusText.textContent = error.message;
+    } finally {
+        splitButton.disabled = false;
+        splitButton.textContent = "Split My Video";
+    }
+});
+
+updateInfo();
+</script>
+
+</body>
+</html>
