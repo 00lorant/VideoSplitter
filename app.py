@@ -79,10 +79,7 @@ def cleanup_job(job_dir):
     try:
         if job_dir.exists():
             shutil.rmtree(job_dir)
-            logger.info(
-                "Cleaned job: %s",
-                job_dir.name
-            )
+            logger.info("Cleaned job: %s", job_dir.name)
     except Exception:
         logger.exception("Cleanup failed")
 
@@ -107,18 +104,12 @@ async def split_video(
     }
 
     if not video.filename:
-        raise HTTPException(
-            400,
-            "Please select a video."
-        )
+        raise HTTPException(400, "Please select a video.")
 
     extension = Path(video.filename).suffix.lower()
 
     if extension not in allowed_extensions:
-        raise HTTPException(
-            400,
-            "Unsupported video format."
-        )
+        raise HTTPException(400, "Unsupported video format.")
 
     if clip_duration < 1 or clip_duration > MAX_CLIP_DURATION:
         raise HTTPException(
@@ -138,9 +129,7 @@ async def split_video(
 
     try:
 
-        # ------------------------------------------
         # SAVE UPLOAD IN SMALL CHUNKS
-        # ------------------------------------------
 
         total_size = 0
 
@@ -177,9 +166,7 @@ async def split_video(
             job_id
         )
 
-        # ------------------------------------------
         # GET VIDEO DURATION
-        # ------------------------------------------
 
         probe = subprocess.run(
             [
@@ -203,67 +190,68 @@ async def split_video(
                 "Could not determine video duration."
             )
 
-        total_clips = math.ceil(
+        expected_clips = math.ceil(
             duration / clip_duration
         )
 
         logger.info(
-            "Processing video: %.2f seconds | "
-            "Clip length: %s seconds | Total clips: %s",
+            "Starting single-pass processing: "
+            "%.2f seconds | Clip length: %s | "
+            "Expected clips: %s",
             duration,
             clip_duration,
-            total_clips
+            expected_clips
         )
 
-        # ------------------------------------------
-        # CREATE CLIPS
-        # ------------------------------------------
+        # CREATE ALL CLIPS IN ONE FFMPEG PASS
 
-        for index in range(total_clips):
+        output_pattern = str(
+            output_dir / "clip_%03d.mp4"
+        )
 
-            start_time = index * clip_duration
+        subprocess.run(
+            [
+                "ffmpeg",
+                "-hide_banner",
+                "-loglevel", "error",
+                "-y",
+                "-i", str(input_path),
 
-            remaining = duration - start_time
+                "-map", "0:v:0",
+                "-map", "0:a?",
 
-            current_length = min(
-                clip_duration,
-                remaining
+                "-c", "copy",
+
+                "-f", "segment",
+                "-segment_time", str(clip_duration),
+                "-segment_start_number", "1",
+                "-reset_timestamps", "1",
+                "-segment_format", "mp4",
+                "-segment_format_options", "movflags=+faststart",
+
+                output_pattern
+            ],
+            capture_output=True,
+            text=True,
+            check=True,
+            timeout=1800
+        )
+
+        clips = sorted(output_dir.glob("*.mp4"))
+
+        if not clips:
+            raise HTTPException(
+                500,
+                "No clips were created."
             )
 
-            clip_path = output_dir / (
-                f"clip_{index + 1:03d}.mp4"
-            )
+        logger.info(
+            "Created %s clips for job %s",
+            len(clips),
+            job_id
+        )
 
-            subprocess.run(
-                [
-                    "ffmpeg",
-                    "-y",
-                    "-ss", str(start_time),
-                    "-i", str(input_path),
-                    "-t", str(current_length),
-                    "-map", "0:v:0",
-                    "-map", "0:a?",
-                    "-c", "copy",
-                    "-avoid_negative_ts", "make_zero",
-                    "-movflags", "+faststart",
-                    str(clip_path)
-                ],
-                capture_output=True,
-                text=True,
-                check=True,
-                timeout=600
-            )
-
-            logger.info(
-                "Clip %s/%s completed: %s",
-                index + 1,
-                total_clips,
-                job_id
-            )
-
-        # ------------------------------------------
-        # CREATE ZIP FILE
-        # ------------------------------------------
+        # CREATE ZIP WITHOUT COMPRESSION
 
         with zipfile.ZipFile(
             zip_path,
@@ -271,7 +259,7 @@ async def split_video(
             compression=zipfile.ZIP_STORED
         ) as archive:
 
-            for clip in sorted(output_dir.glob("*.mp4")):
+            for clip in clips:
 
                 archive.write(
                     clip,
@@ -283,9 +271,7 @@ async def split_video(
             job_id
         )
 
-        # ------------------------------------------
         # RETURN DOWNLOAD
-        # ------------------------------------------
 
         return FileResponse(
             path=str(zip_path),
@@ -345,3 +331,4 @@ if __name__ == "__main__":
         port=int(os.environ.get("PORT", 10000))
     )
 
+        
