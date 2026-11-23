@@ -7,207 +7,207 @@
 <title>VideoSplitter</title>
 
 <style>
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
+* { box-sizing:border-box; margin:0; padding:0; }
 
 body {
-    font-family: Arial, sans-serif;
-    background: #090811;
-    color: #fff;
-    min-height: 100vh;
-    padding: 25px 16px;
+    font-family:Arial,sans-serif;
+    background:#090811;
+    color:white;
+    min-height:100vh;
+    padding:25px 16px;
 }
 
-.container {
-    max-width: 650px;
-    margin: 0 auto;
-}
+.container { max-width:650px; margin:auto; }
 
-header {
-    text-align: center;
-    padding: 30px 0;
-}
+header { text-align:center; padding:30px 0; }
 
 .logo {
-    font-size: 30px;
-    font-weight: 800;
-    color: #a78bfa;
+    font-size:30px;
+    font-weight:800;
+    color:#a78bfa;
 }
 
-header p {
-    color: #9994ae;
-    margin-top: 10px;
-}
+header p { color:#9994ae; margin-top:10px; }
 
 .panel {
-    background: #141220;
-    border: 1px solid #302744;
-    border-radius: 18px;
-    padding: 24px;
-    margin-bottom: 20px;
+    background:#141220;
+    border:1px solid #302744;
+    border-radius:18px;
+    padding:24px;
+    margin-bottom:20px;
 }
 
-h2 {
-    font-size: 18px;
-    margin-bottom: 17px;
-}
+h2 { font-size:18px; margin-bottom:17px; }
 
 .upload {
-    border: 2px dashed #6844a5;
-    border-radius: 14px;
-    padding: 35px 15px;
-    text-align: center;
-    background: #1b162b;
-    cursor: pointer;
+    display:block;
+    border:2px dashed #6844a5;
+    border-radius:14px;
+    padding:30px 15px;
+    text-align:center;
+    background:#1b162b;
+    cursor:pointer;
 }
 
-.upload:hover {
-    border-color: #b18aff;
-}
+.upload .symbol { font-size:38px; margin-bottom:12px; }
+.upload p { color:#aaa4bc; font-size:14px; margin-top:8px; }
 
-.upload .symbol {
-    font-size: 38px;
-    margin-bottom: 12px;
-}
-
-.upload p {
-    color: #aaa4bc;
-    font-size: 14px;
-    margin-top: 8px;
-}
-
-#video {
-    display: none;
-}
-
-#fileName {
-    color: #c4a5ff;
-    margin-top: 15px;
-    font-size: 14px;
-    overflow-wrap: anywhere;
-}
+#video { display:none; }
 
 .options {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:10px;
 }
 
 .option {
-    background: #211b32;
-    color: #ddd5ed;
-    border: 1px solid #403450;
-    padding: 15px 5px;
-    border-radius: 10px;
-    font-size: 14px;
-    cursor: pointer;
+    background:#211b32;
+    color:#ddd5ed;
+    border:1px solid #403450;
+    padding:15px 5px;
+    border-radius:10px;
+    font-size:14px;
+    cursor:pointer;
 }
 
 .option.active {
-    background: #7139c6;
-    border-color: #b18aff;
-    color: white;
+    background:#7139c6;
+    border-color:#b18aff;
+    color:white;
 }
 
 label {
-    display: block;
-    color: #aaa4bc;
-    font-size: 13px;
-    margin-bottom: 10px;
+    display:block;
+    color:#aaa4bc;
+    font-size:13px;
+    margin-bottom:10px;
 }
 
 input[type="number"] {
-    width: 100%;
-    padding: 14px;
-    border-radius: 10px;
-    background: #211b32;
-    border: 1px solid #403450;
-    color: white;
-    font-size: 16px;
-    margin-top: 10px;
+    width:100%;
+    padding:14px;
+    border-radius:10px;
+    background:#211b32;
+    border:1px solid #403450;
+    color:white;
+    font-size:16px;
+    margin-top:10px;
 }
 
-.custom {
-    margin-top: 20px;
-}
+.custom { margin-top:20px; }
 
 .info {
-    color: #aaa4bc;
-    font-size: 13px;
-    margin-top: 16px;
-    line-height: 1.6;
+    color:#aaa4bc;
+    font-size:13px;
+    margin-top:16px;
+    line-height:1.6;
 }
 
 .main-button {
-    width: 100%;
-    padding: 17px;
-    border: none;
-    border-radius: 12px;
-    background: linear-gradient(100deg, #7838d2, #a15cf4);
-    color: white;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    margin-top: 20px;
+    width:100%;
+    padding:17px;
+    border:none;
+    border-radius:12px;
+    background:linear-gradient(100deg,#7838d2,#a15cf4);
+    color:white;
+    font-size:16px;
+    font-weight:bold;
+    cursor:pointer;
+    margin-top:20px;
 }
 
-.main-button:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
+.main-button:disabled { opacity:.5; cursor:not-allowed; }
 
 .status {
-    display: none;
-    margin-top: 20px;
-    padding: 16px;
-    border-radius: 12px;
-    background: #211b32;
-    color: #d8c5ff;
-    line-height: 1.5;
-    overflow-wrap: anywhere;
+    display:none;
+    margin-top:20px;
+    padding:16px;
+    border-radius:12px;
+    background:#211b32;
+    color:#d8c5ff;
+    line-height:1.5;
+    overflow-wrap:anywhere;
 }
 
 .progress {
-    width: 100%;
-    height: 7px;
-    background: #393047;
-    border-radius: 20px;
-    margin-top: 14px;
-    overflow: hidden;
+    width:100%;
+    height:7px;
+    background:#393047;
+    border-radius:20px;
+    margin-top:14px;
+    overflow:hidden;
 }
 
 .progress div {
-    width: 35%;
-    height: 100%;
-    background: #a16aff;
-    animation: loading 1.5s infinite alternate;
+    width:35%;
+    height:100%;
+    background:#a16aff;
+    animation:loading 1.5s infinite alternate;
 }
 
 @keyframes loading {
-    from { width: 15%; }
-    to { width: 95%; }
+    from { width:15%; }
+    to { width:95%; }
+}
+
+.video-item {
+    background:#211b32;
+    border:1px solid #403450;
+    border-radius:12px;
+    padding:14px;
+    margin-top:12px;
+    overflow-wrap:anywhere;
+}
+
+.video-name {
+    font-weight:bold;
+    font-size:14px;
+    margin-bottom:8px;
+}
+
+.video-status {
+    color:#bda1ed;
+    font-size:13px;
+    margin-bottom:12px;
+}
+
+.video-actions {
+    display:flex;
+    gap:8px;
+}
+
+.small-button {
+    border:0;
+    border-radius:8px;
+    padding:10px 13px;
+    color:white;
+    background:#7139c6;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.delete-button { background:#493047; }
+
+.empty {
+    color:#9994ae;
+    font-size:14px;
+    line-height:1.5;
 }
 
 footer {
-    text-align: center;
-    color: #716b82;
-    font-size: 12px;
-    padding: 20px;
+    text-align:center;
+    color:#716b82;
+    font-size:12px;
+    padding:20px;
 }
 
-@media(max-width: 400px) {
-    .options {
-        grid-template-columns: repeat(2, 1fr);
-    }
+@media(max-width:400px) {
+    .options { grid-template-columns:repeat(2,1fr); }
 }
 </style>
 </head>
 
 <body>
-
 <div class="container">
 
 <header>
@@ -216,21 +216,25 @@ footer {
 </header>
 
 <div class="panel">
-    <h2>1. Upload your video</h2>
+    <h2>1. Add your videos</h2>
 
     <label class="upload" for="video">
         <div class="symbol">＋</div>
-        <strong>Choose a video</strong>
-        <p>Upload from your device or camera roll</p>
+        <strong>Choose up to 5 videos</strong>
+        <p>Select videos from your Camera Roll or Files</p>
         <p>MP4, MOV, MKV, AVI, WEBM</p>
-        <div id="fileName"></div>
     </label>
 
     <input
         type="file"
         id="video"
         accept="video/mp4,video/quicktime,video/x-matroska,video/x-msvideo,video/webm,.m4v"
+        multiple
     >
+
+    <p class="info" id="selectionInfo">
+        You can add up to 5 videos.
+    </p>
 </div>
 
 <div class="panel">
@@ -263,41 +267,125 @@ footer {
 </div>
 
 <div class="panel">
-    <h2>3. Split your video</h2>
+    <h2>3. Video queue</h2>
 
     <p class="info">
-        Your video will be split sequentially. The final clip may be shorter
-        than your selected length.
+        Videos process one after another. You can add up to 5 videos,
+        including videos already saved below.
     </p>
 
-    <button class="main-button" id="splitButton">
-        Split My Video
+    <div id="queueList">
+        <p class="empty">No videos waiting.</p>
+    </div>
+
+    <button class="main-button" id="startButton">
+        Start Video Queue
     </button>
 
     <div class="status" id="status">
-        <strong id="statusText">Preparing your video...</strong>
-        <div class="progress">
-            <div></div>
-        </div>
+        <strong id="statusText">Preparing your videos...</strong>
+        <div class="progress"><div></div></div>
     </div>
 </div>
 
-<footer>
-    VideoSplitter · Simple video splitting
-</footer>
+<div class="panel">
+    <h2>4. My Videos</h2>
+
+    <p class="info">
+        Completed ZIP files stay here until you download or delete them.
+    </p>
+
+    <div id="savedList">
+        <p class="empty">Your completed videos will appear here.</p>
+    </div>
+</div>
+
+<footer>VideoSplitter · Simple video splitting</footer>
 
 </div>
 
 <script>
 const videoInput = document.getElementById("video");
-const fileName = document.getElementById("fileName");
 const customInput = document.getElementById("customMinutes");
 const clipInfo = document.getElementById("clipInfo");
-const splitButton = document.getElementById("splitButton");
+const selectionInfo = document.getElementById("selectionInfo");
+const startButton = document.getElementById("startButton");
+const queueList = document.getElementById("queueList");
+const savedList = document.getElementById("savedList");
 const statusBox = document.getElementById("status");
 const statusText = document.getElementById("statusText");
 
 let selectedDuration = 60;
+let jobs = [];
+let savedVideos = [];
+let processing = false;
+let database = null;
+
+const allowedExtensions = [
+    ".mp4", ".mov", ".mkv", ".avi", ".webm", ".m4v"
+];
+
+// --------------------------------------------------
+// BROWSER STORAGE
+// --------------------------------------------------
+
+function openDatabase() {
+    return new Promise((resolve, reject) => {
+        const request = indexedDB.open("VideoSplitterStorage", 1);
+
+        request.onupgradeneeded = () => {
+            const db = request.result;
+
+            if (!db.objectStoreNames.contains("videos")) {
+                db.createObjectStore("videos", {keyPath:"id"});
+            }
+        };
+
+        request.onsuccess = () => {
+            database = request.result;
+            resolve(database);
+        };
+
+        request.onerror = () => reject(request.error);
+    });
+}
+
+function saveToStorage(item) {
+    return new Promise((resolve, reject) => {
+        const transaction = database.transaction("videos", "readwrite");
+
+        transaction.objectStore("videos").put(item);
+
+        transaction.oncomplete = resolve;
+        transaction.onerror = () => reject(transaction.error);
+        transaction.onabort = () => reject(transaction.error);
+    });
+}
+
+function loadFromStorage() {
+    return new Promise((resolve, reject) => {
+        const transaction = database.transaction("videos", "readonly");
+        const request = transaction.objectStore("videos").getAll();
+
+        request.onsuccess = () => resolve(request.result || []);
+        request.onerror = () => reject(request.error);
+    });
+}
+
+function deleteFromStorage(id) {
+    return new Promise((resolve, reject) => {
+        const transaction = database.transaction("videos", "readwrite");
+
+        transaction.objectStore("videos").delete(id);
+
+        transaction.oncomplete = resolve;
+        transaction.onerror = () => reject(transaction.error);
+    });
+}
+
+// --------------------------------------------------
+// CLIP LENGTH
+// --------------------------------------------------
 
 document.querySelectorAll(".option").forEach(button => {
     button.addEventListener("click", () => {
@@ -317,14 +405,9 @@ customInput.addEventListener("input", () => {
         document.querySelectorAll(".option").forEach(item => {
             item.classList.remove("active");
         });
+
         updateInfo();
     }
-});
-
-videoInput.addEventListener("change", () => {
-    const file = videoInput.files[0];
-
-    fileName.textContent = file ? file.name : "";
 });
 
 function getDuration() {
@@ -332,7 +415,7 @@ function getDuration() {
         const minutes = Number(customInput.value);
 
         if (!Number.isFinite(minutes) || minutes <= 0 || minutes > 60) {
-            throw new Error("Enter a custom duration between 0.02 and 60 minutes.");
+            throw new Error("Enter a duration between 0.02 and 60 minutes.");
         }
 
         return Math.max(1, Math.round(minutes * 60));
@@ -343,83 +426,305 @@ function getDuration() {
 
 function updateInfo() {
     try {
-        const seconds = getDuration();
-        const minutes = seconds / 60;
-
-        clipInfo.textContent =
-            `Each clip will be ${minutes} minute(s) long.`;
+        const minutes = getDuration() / 60;
+        clipInfo.textContent = `Each clip will be ${minutes} minute(s) long.`;
     } catch (error) {
         clipInfo.textContent = error.message;
     }
 }
 
-splitButton.addEventListener("click", async () => {
-    const file = videoInput.files[0];
+// --------------------------------------------------
+// ADD VIDEOS
+// --------------------------------------------------
 
-    if (!file) {
-        alert("Please choose a video first.");
+videoInput.addEventListener("change", () => {
+    const files = Array.from(videoInput.files || []);
+    const availableSlots = 5 - jobs.length - savedVideos.length;
+
+    if (!files.length) return;
+
+    let added = 0;
+
+    for (const file of files) {
+        if (jobs.length + savedVideos.length >= 5) {
+            alert("You can have up to 5 videos in your queue and saved box.");
+            break;
+        }
+
+        const extension = "." + file.name.split(".").pop().toLowerCase();
+
+        if (!allowedExtensions.includes(extension)) {
+            alert("Unsupported video format: " + file.name);
+            continue;
+        }
+
+        jobs.push({
+            id: crypto.randomUUID(),
+            file:file,
+            name:file.name,
+            status:"Waiting"
+        });
+
+        added++;
+    }
+
+    selectionInfo.textContent =
+        `${added} video(s) added. ${jobs.length + savedVideos.length} of 5 slots used.`;
+
+    videoInput.value = "";
+    renderQueue();
+});
+
+// --------------------------------------------------
+// DISPLAY QUEUE
+// --------------------------------------------------
+
+function renderQueue() {
+    queueList.innerHTML = "";
+
+    if (!jobs.length) {
+        queueList.innerHTML = '<p class="empty">No videos waiting.</p>';
         return;
     }
 
-    let duration;
+    jobs.forEach(job => {
+        const item = document.createElement("div");
+        item.className = "video-item";
+
+        const name = document.createElement("div");
+        name.className = "video-name";
+        name.textContent = job.name;
+
+        const state = document.createElement("div");
+        state.className = "video-status";
+        state.textContent = job.status;
+
+        item.append(name, state);
+
+        if (job.status !== "Processing") {
+            const remove = document.createElement("button");
+            remove.className = "small-button delete-button";
+            remove.textContent = "Remove";
+
+            remove.onclick = () => {
+                jobs = jobs.filter(entry => entry.id !== job.id);
+                renderQueue();
+                updateSlots();
+            };
+
+            item.appendChild(remove);
+        }
+
+        queueList.appendChild(item);
+    });
+}
+
+// --------------------------------------------------
+// DISPLAY SAVED VIDEOS
+// --------------------------------------------------
+
+function renderSaved() {
+    savedList.innerHTML = "";
+
+    if (!savedVideos.length) {
+        savedList.innerHTML =
+            '<p class="empty">Your completed videos will appear here.</p>';
+        return;
+    }
+
+    savedVideos.forEach(video => {
+        const item = document.createElement("div");
+        item.className = "video-item";
+
+        const name = document.createElement("div");
+        name.className = "video-name";
+        name.textContent = video.name;
+
+        const state = document.createElement("div");
+        state.className = "video-status";
+        state.textContent = "Ready to download";
+
+        const actions = document.createElement("div");
+        actions.className = "video-actions";
+
+        const download = document.createElement("button");
+        download.className = "small-button";
+        download.textContent = "Download ZIP";
+
+        download.onclick = () => {
+            const url = URL.createObjectURL(video.blob);
+            const link = document.createElement("a");
+
+            link.href = url;
+            link.download = video.downloadName || "VideoSplitter_Clips.zip";
+
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+
+            setTimeout(() => URL.revokeObjectURL(url), 60000);
+        };
+
+        const remove = document.createElement("button");
+        remove.className = "small-button delete-button";
+        remove.textContent = "Delete";
+
+        remove.onclick = async () => {
+            if (!confirm("Delete this saved video?")) return;
+
+            await deleteFromStorage(video.id);
+            savedVideos = savedVideos.filter(v => v.id !== video.id);
+
+            renderSaved();
+            updateSlots();
+        };
+
+        actions.append(download, remove);
+        item.append(name, state, actions);
+        savedList.appendChild(item);
+    });
+}
+
+function updateSlots() {
+    const used = jobs.length + savedVideos.length;
+    selectionInfo.textContent = `${used} of 5 video slots used.`;
+}
+
+// --------------------------------------------------
+// PROCESS ONE VIDEO
+// --------------------------------------------------
+
+async function processVideo(job) {
+    const formData = new FormData();
+
+    formData.append("video", job.file);
+    formData.append("clip_duration", getDuration());
+
+    statusText.textContent = "Processing: " + job.name;
+
+    const response = await fetch("/split", {
+        method:"POST",
+        body:formData
+    });
+
+    if (!response.ok) {
+        let message = "Video processing failed.";
+
+        try {
+            const error = await response.json();
+            message = error.detail || message;
+        } catch (_) {}
+
+        throw new Error(message);
+    }
+
+    const blob = await response.blob();
+
+    if (!blob.size) {
+        throw new Error("The server returned an empty ZIP file.");
+    }
+
+    const savedItem = {
+        id:job.id,
+        name:job.name,
+        downloadName:job.name.replace(/\.[^.]+$/, "") + "_Clips.zip",
+        blob:blob,
+        savedAt:Date.now()
+    };
+
+    // SAVE ZIP BEFORE REMOVING IT FROM THE QUEUE
+    await saveToStorage(savedItem);
+
+    savedVideos.push(savedItem);
+    renderSaved();
+}
+
+// --------------------------------------------------
+// AUTOMATIC QUEUE
+// --------------------------------------------------
+
+startButton.addEventListener("click", async () => {
+    if (processing) return;
+
+    if (!jobs.length) {
+        alert("Add at least one video first.");
+        return;
+    }
 
     try {
-        duration = getDuration();
+        getDuration();
     } catch (error) {
         alert(error.message);
         return;
     }
 
-    const formData = new FormData();
-    formData.append("video", file);
-    formData.append("clip_duration", duration);
-
-    splitButton.disabled = true;
-    splitButton.textContent = "Processing...";
+    processing = true;
+    startButton.disabled = true;
+    startButton.textContent = "Queue Processing...";
     statusBox.style.display = "block";
-    statusText.textContent = "Uploading and splitting your video. Please wait.";
 
     try {
-        const response = await fetch("/split", {
-            method: "POST",
-            body: formData
-        });
+        while (jobs.some(job => job.status === "Waiting")) {
+            const job = jobs.find(job => job.status === "Waiting");
 
-        if (!response.ok) {
-            let message = "Video processing failed.";
+            job.status = "Processing";
+            renderQueue();
 
             try {
-                const error = await response.json();
-                message = error.detail || message;
-            } catch (_) {}
+                await processVideo(job);
 
-            throw new Error(message);
+                jobs = jobs.filter(entry => entry.id !== job.id);
+                statusText.textContent = "Finished: " + job.name;
+
+            } catch (error) {
+                job.status = "Failed: " + error.message;
+                statusText.textContent = "Could not process: " + job.name;
+            }
+
+            renderQueue();
+            updateSlots();
         }
 
-        const blob = await response.blob();
-        const downloadUrl = URL.createObjectURL(blob);
-        const link = document.createElement("a");
+        if (jobs.length === 0) {
+            statusText.textContent = "All videos have finished!";
+        } else {
+            statusText.textContent =
+                "Some videos failed. Remove them or try again later.";
+        }
 
-        link.href = downloadUrl;
-        link.download = "VideoSplitter_Clips.zip";
-        document.body.appendChild(link);
-        link.click();
-        link.remove();
-
-        statusText.textContent = "Your clips are ready! Your ZIP download should begin.";
-
-        setTimeout(() => URL.revokeObjectURL(downloadUrl), 60000);
-
-    } catch (error) {
-        statusText.textContent = error.message;
     } finally {
-        splitButton.disabled = false;
-        splitButton.textContent = "Split My Video";
+        processing = false;
+        startButton.disabled = false;
+        startButton.textContent = "Start Video Queue";
+        updateSlots();
     }
 });
 
-updateInfo();
-</script>
+// --------------------------------------------------
+// STARTUP
+// --------------------------------------------------
 
+async function startApp() {
+    try {
+        await openDatabase();
+        savedVideos = await loadFromStorage();
+
+        renderSaved();
+        renderQueue();
+        updateSlots();
+
+    } catch (error) {
+        console.error(error);
+
+        alert(
+            "Browser storage could not be opened. " +
+            "Saved video storage may not work in this browser."
+        );
+    }
+}
+
+updateInfo();
+startApp();
+</script>
 </body>
 </html>
